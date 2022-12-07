@@ -6,6 +6,7 @@ require_once("cbsd_manager-lib.inc");
 global $configfile;
 global $workdir;
 
+$prerequisites_ok = "true";
 $pgtitle = array(gtext("Extensions"), "CBSD", "Create");
 $pconfig = [];
 

@@ -12,6 +12,8 @@ $sphere_array = [];
 $sphere_record = [];
 $pconfig = [];
 
+$prerequisites_ok = "true";
+
 if(!file_exists("{$workdir}/cmd.subr")):
 	$errormsg = gtext('CBSD workdir not initialized yet.')
 			. ' '
@@ -23,7 +25,7 @@ if(!file_exists("{$workdir}/cmd.subr")):
 endif;
 
 if(!empty($cbsd_version)):
-	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | sort",$profileinfo);
+	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | /usr/bin/sort",$profileinfo);
 	$profilelist = [];
 	foreach($profileinfo as $profile):
 		$profilelist[$profile] = $profile;

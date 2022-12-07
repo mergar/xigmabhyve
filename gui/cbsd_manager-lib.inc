@@ -71,7 +71,7 @@ function get_version_cbsd() {
 // Get all base releases list.
 function get_all_release_list() {
 	global $workdir;
-	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 has_init=1 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | sort",$relinfo);
+	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 has_init=1 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | cbsd_manager-lib.inc",$relinfo);
 	$rellist = [];
 	foreach($relinfo as $rel):
 		$rellist[$rel] = $rel;
