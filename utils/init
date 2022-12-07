@@ -242,4 +242,7 @@ if [ ${ret} -ne 0 ]; then
 	sysrc -qf ~cbsd/etc/bhyve-default-default.conf default_ci_gw4="${GW4}" ci_gw4="${GW4}" > /dev/null 2>&1
 fi
 
+# workaround for CBSD < 13.1.20
+[ ! -h /sbin/pfctl ] && ln -s ${EXTENSION_ROOT}/bin/sbin/pfctl
+
 exit 0

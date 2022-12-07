@@ -73,4 +73,7 @@ echo "rm -rf ${EXTENSION_ROOT}" | tee -a /var/log/cbsd-init.log
 rm -rf ${EXTENSION_ROOT} > /dev/null 2>&1
 pkg remove -y cbsd > /dev/null 2>&1
 
+# workaround for CBSD < 13.1.20
+[ -h /sbin/pfctl ] && /bin/rm -f /sbin/pfctl
+
 exit 0
