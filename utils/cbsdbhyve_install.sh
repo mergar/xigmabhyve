@@ -117,8 +117,6 @@ if [ ! -x ${EXTENSION_DIR}/bin/sbin/pfctl ]; then
 	[ ! -s ${EXTENSION_DIR}/xigma-rootfs.tgz ] && err 1 "unable to fetch ${rootfs_url}: no such ${EXTENSION_DIR}/xigma-rootfs.tgz"
 	tar xfz xigma-rootfs.tgz && rm -f xigma-rootfs.tgz
 	mv xigma-rootfs bin
-	# export PATH=${PATH}:/mnt/ext/cbsd-bhyve/bin/sbin/:/mnt/ext/cbsd-bhyve/bin/usr/bin:/mnt/ext/cbsd-bhyve/bin/usr/sbi
-	rsync -avz --links ${EXTENSION_DIR}/bin/ /
 	hash -r
 fi
 
