@@ -223,7 +223,7 @@ $document->render();
 				$pconfig['release'] = exec("/usr/bin/grep '^last_release_created=' {$configfile} 2>/dev/null | /usr/bin/cut -d'\"' -f2");
 			endif;
 
-			html_combobox2('release',gettext('Profile name'),array_key_exists($pconfig['release'] ?? '',$b_action) ? $pconfig['release'] : $default_options ,$b_action,'<a href="cbsd_manager_golds.php"><span>Warn more (Gold image libraries)</span></a>',true,false,'type_change()');
+			html_combobox2('release',gettext('Profile name'),array_key_exists($pconfig['release'] ?? '',$b_action) ? $pconfig['release'] : $default_options ,$b_action,'<a href="cbsd_manager_golds.php"><span>Warm more (Gold image libraries)</span></a>',true,false,'type_change()');
 			html_combobox2('pubkey',  gettext('Pubkey'),!empty($pconfig['pubkey']),$c_action,"{$pubkey_comment}",true,false);
 			html_checkbox2('nowstart',gettext('Start after creation'),!empty($pconfig['nowstart']) ? true : false,gettext('Start the VM after creation(May be overridden by later cbsd releases).'),'',false);
 			html_checkbox2('autostart',gettext('Auto start on boot'),!empty($pconfig['autostart']) ? true : false,gettext('Automatically start the VM at boot time.'),'',false);
