@@ -20,12 +20,13 @@ unset tmpver
 
 if [ ! -x "${CBSD_CMD}" ]; then
 	echo "No such cbsd executable, install via pkg.."
-	env SIGNATURE_TYPE=none ASSUME_ALWAYS_YES=yes IGNORE_OSVERSION=yes pkg install -y cbsd
-	# 
-	#rootfs_url="https://www.bsdstore.ru/downloads/xigma/${majorver}/cbsd-13.1.18.pkg"
-	#fetch -o cbsd.pkg ${rootfs_url}
-	#pkg install -y ./cbsd.pkg
-	#rm -f ./cbsd.pkg
+
+	#env SIGNATURE_TYPE=none ASSUME_ALWAYS_YES=yes IGNORE_OSVERSION=yes pkg install -y cbsd
+
+	rootfs_url="https://www.bsdstore.ru/downloads/xigma/${majorver}/cbsd-13.1.19.pkg"
+	fetch -o cbsd.pkg ${rootfs_url}
+	pkg install -y ./cbsd.pkg
+	rm -f ./cbsd.pkg
 fi
 
 hash -r
