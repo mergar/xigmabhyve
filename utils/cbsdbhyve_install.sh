@@ -23,7 +23,9 @@ if [ ! -x "${CBSD_CMD}" ]; then
 
 	#env SIGNATURE_TYPE=none ASSUME_ALWAYS_YES=yes IGNORE_OSVERSION=yes pkg install -y cbsd
 
-	rootfs_url="https://www.bsdstore.ru/downloads/xigma/${majorver}/cbsd-13.1.19.pkg"
+	# devel
+	env SIGNATURE_TYPE=none ASSUME_ALWAYS_YES=yes IGNORE_OSVERSION=yes pkg install -y sudo libssh2 rsync sqlite3
+	rootfs_url="https://www.bsdstore.ru/downloads/xigma/${majorver}/cbsd-13.1.19.a.pkg"
 	fetch -o cbsd.pkg ${rootfs_url}
 	pkg install -y ./cbsd.pkg
 	rm -f ./cbsd.pkg

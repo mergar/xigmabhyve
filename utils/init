@@ -215,10 +215,6 @@ else
 	exit 1
 fi
 
-# workaround for CBSD < 13.1.20
-[ ! -h /sbin/pfctl ] && ln -s ${EXTENSION_ROOT}/bin/sbin/pfctl /sbin/pfctl
-[ ! -h /usr/sbin/idprio ] && ln -s ${EXTENSION_ROOT}/bin/usr/sbin/idprio /usr/sbin/idprio
-
 if [ "${cbsd_nat}" = "1" ]; then
 	/usr/local/bin/cbsd naton 2>&1 | tee -a /var/log/cbsd-init.log
 else
