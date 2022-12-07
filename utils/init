@@ -5,6 +5,16 @@ MY_PATH="$( realpath ${progdir} )"
 
 CONF_PATH="${MY_PATH}/../conf"
 
+CURRENTDATE=`date -j +"%Y-%m-%d %H:%M:%S"`
+
+echo "${CURRENTDATE}: init $*" > /var/log/cbsd.init.log
+
+EXTENSION_ROOT=$( realpath /usr/local/www/ext/cbsd-bhyve )
+if [ ! -d "${EXTENSION_ROOT}" ]; then
+	echo "error: not directory: ${EXTENSION_ROOT} ?" | tee -a /var/log/cbsd-init.log
+	exit 1
+fi
+
 # rc.d
 rcd_update=0
 if [ -r "${MY_PATH}/../rc.d/cbsdd" ]; then
@@ -24,14 +34,15 @@ fi
 # module conflict
 for i in vboxdrv vboxnetadp vboxnetflt; do
 	if kldstat -qm ${i} >/dev/null 2>&1; then
-		echo "Module confict: please unload module first: ${i}"
+		echo "Module confict: please unload module first: ${i}" | tee -a /var/log/cbsd-init.log
+		exit 1
 	fi
 done
 
 for i in vmm if_tuntap if_bridge nmdm; do
 	if ! kldstat -qm ${i} >/dev/null 2>&1; then
-		echo "load module: ${i}"
-		kldload ${i}
+		echo "load module: ${i}" | tee -a /var/log/cbsd-init.log
+		kldload ${i} | tee -a /var/log/cbsd-init.log
 	fi
 done
 
@@ -46,8 +57,11 @@ sysrc -q cbsdd_enable="YES" > /dev/null 2>&1
 /sbin/ifconfig cbsd0 > /dev/null 2>&1
 ret=$?
 if [ ${ret} -ne 0 ]; then
+	echo "/sbin/ifconfig bridge0 create description CBSD" | tee -a /var/log/cbsd-init.log
 	/sbin/ifconfig bridge0 create description CBSD
+	echo "/sbin/ifconfig bridge0 name cbsd0" | tee -a /var/log/cbsd-init.log
 	/sbin/ifconfig bridge0 name cbsd0
+	echo "/sbin/ifconfig cbsd0 up" | tee -a /var/log/cbsd-init.log
 	/sbin/ifconfig cbsd0 up
 fi
 
@@ -64,7 +78,7 @@ fi
 if [ -z "${WORKDIR}" ]; then
 	. /etc/rc.conf
 	if [ -z "${cbsd_workdir}" ]; then
-		echo "no such workdir"
+		echo "error: no such CBSD workdir" | tee -a /var/log/cbsd-init.log
 		exit 1
 	fi
 
@@ -181,14 +195,14 @@ sysrc -qf /tmp/initenv.conf nodeippool="${NET}" \
 	nodeip="${natip}" \
 	natip="${natip}" \
 	ipfw_enable="0" \
-	workdir="${WORKDIR}"
+	workdir="${WORKDIR}" | tee -a /var/log/cbsd-init.log
 
-/usr/local/cbsd/sudoexec/initenv /tmp/initenv.conf > /tmp/initenv.log 2>&1
+/usr/local/cbsd/sudoexec/initenv /tmp/initenv.conf 2>&1 | tee -a /var/log/cbsd-init.log
 
 if [ "${cbsd_nat}" = "1" ]; then
-	/usr/local/bin/cbsd naton >> /tmp/initenv.log 2>&1
+	/usr/local/bin/cbsd naton 2>&1 | tee -a /var/log/cbsd-init.log
 else
-	/usr/local/bin/cbsd natoff >> /tmp/initenv.log 2>&1
+	/usr/local/bin/cbsd natoff 2>&1 | tee -a /var/log/cbsd-init.log
 fi
 
 if [ ${new_workdir} -eq 1 ]; then
