@@ -95,6 +95,8 @@ if($_POST):
 						unlink("{$workdir}/src/iso/cbsd-cloud-{$iso_img}");
 					elseif(file_exists("{$workdir}/src/iso/cbsd-{$iso_img}")):
 						unlink("{$workdir}/src/iso/cbsd-{$iso_img}");
+					elseif(file_exists("{$workdir}/src/iso/{$iso_img}")):
+						unlink("{$workdir}/src/iso/{$iso_img}");
 					endif;
 					$retval = 0;
 				endif;
