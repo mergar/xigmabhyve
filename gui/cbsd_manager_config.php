@@ -125,9 +125,16 @@ if($_POST):
 			header('Location: cbsd_manager_gui.php');
 			exit;
 		else:
-			print_error_box("error");
+			unset($input_errors);
+			unset($errormsg);
+			$errormsg = "";
+			ob_start();
+			include('/var/log/cbsd-init.log');
+			$ausgabe = ob_get_contents();
+			$ausgabe = preg_replace('/\e[[][A-Za-z0-9];?[0-9]*m?/', '', $ausgabe);
+			ob_end_clean();
+			$errormsg .= str_replace("\n", "<br />", $ausgabe)."<br />";
 		endif;
-
 	endif;
 endif;
 

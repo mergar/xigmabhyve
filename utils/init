@@ -7,11 +7,17 @@ CONF_PATH="${MY_PATH}/../conf"
 
 CURRENTDATE=`date -j +"%Y-%m-%d %H:%M:%S"`
 
-echo "${CURRENTDATE}: init $*" > /var/log/cbsd.init.log
+echo "${CURRENTDATE}: init $*" > /var/log/cbsd-init.log
 
 EXTENSION_ROOT=$( realpath /usr/local/www/ext/cbsd-bhyve )
 if [ ! -d "${EXTENSION_ROOT}" ]; then
 	echo "error: not directory: ${EXTENSION_ROOT} ?" | tee -a /var/log/cbsd-init.log
+	exit 1
+fi
+
+if [ ! -x "${EXTENSION_ROOT}/bin/usr/bin/cc" ]; then
+	echo "error: not such binaries in: ${EXTENSION_ROOT}/bin" | tee -a /var/log/cbsd-init.log
+	echo "error: try to deinstall/install extension" | tee -a /var/log/cbsd-init.log
 	exit 1
 fi
 
@@ -195,6 +201,7 @@ sysrc -qf /tmp/initenv.conf nodeippool="${NET}" \
 	nodeip="${natip}" \
 	natip="${natip}" \
 	ipfw_enable="0" \
+	post_cbsd_cmd_path="${EXTENSION_ROOT}/bin/sbin:${EXTENSION_ROOT}/bin/usr/bin:${EXTENSION_ROOT}/bin/usr/sbin" \
 	workdir="${WORKDIR}" | tee -a /var/log/cbsd-init.log
 
 /usr/local/cbsd/sudoexec/initenv /tmp/initenv.conf 2>&1 | tee -a /var/log/cbsd-init.log
