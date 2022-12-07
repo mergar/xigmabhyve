@@ -3,12 +3,24 @@ require_once 'auth.inc';
 require_once 'guiconfig.inc';
 require_once("cbsd_manager-lib.inc");
 
+global $workdir;
+
 $gt_selection_delete_confirm = gtext('Do you really want to destroy this image?');
 $pgtitle = [gtext("Extensions"), gtext('CBSD'),gtext('Images')];
 
 $sphere_array = [];
 $sphere_record = [];
 $pconfig = [];
+
+if(!file_exists("{$workdir}/cmd.subr")):
+	$errormsg = gtext('CBSD workdir not initialized yet.')
+			. ' '
+			. '<a href="' . 'cbsd_manager_config.php' . '">'
+			. gtext('Please init CBSD workdir first.')
+			. '</a>';
+			$prerequisites_ok = false;
+			unset($cbsd_version);
+endif;
 
 if(!empty($cbsd_version)):
 	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | sort",$profileinfo);
@@ -18,6 +30,7 @@ if(!empty($cbsd_version)):
 	endforeach;
 	$a_action = $profilelist;
 else:
+	$prerequisites_ok = false;
 	$a_action = [];
 endif;
 
@@ -163,7 +176,7 @@ $document->render();
 		</tbody>
 	</table>
 <?php
-if(!empty($cbsd_version)):
+	if($prerequisites_ok != false ):
 ?>
 	<div id="submit">
 		<input name="Download" type="submit" class="formbtn" value="<?=gtext("Download");?>" onclick="enable_change(true)" />

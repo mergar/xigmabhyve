@@ -4,6 +4,7 @@ require_once 'guiconfig.inc';
 require_once("cbsd_manager-lib.inc");
 
 global $configfile;
+global $workdir;
 
 $pgtitle = array(gtext("Extensions"), "CBSD", "Create");
 $pconfig = [];
@@ -52,22 +53,31 @@ if(!(isset($pconfig['vnc_bind']))):
 	$pconfig['vnc_bind'] = '127.0.0.1';
 endif;
 
-if(!get_all_release_list()):
-	$errormsg = gtext('No gold images downloaded yet.')
+if(!file_exists("{$workdir}/cmd.subr")):
+	$errormsg = gtext('CBSD workdir not initialized yet.')
 			. ' '
-			. '<a href="' . 'cbsd_manager_golds.php' . '">'
-			. gtext('Please download a image first.')
+			. '<a href="' . 'cbsd_manager_config.php' . '">'
+			. gtext('Please init CBSD workdir first.')
 			. '</a>';
 		$prerequisites_ok = false;
-endif;
+else:
+	if(!get_all_release_list()):
+		$errormsg = gtext('No gold images downloaded yet.')
+				. ' '
+				. '<a href="' . 'cbsd_manager_golds.php' . '">'
+				. gtext('Please download a image first.')
+				. '</a>';
+			$prerequisites_ok = false;
+	endif;
 
-if(!get_all_pubkey_list()):
-	$errormsg = gtext('No public key added yet.')
-			. ' '
-			. '<a href="' . 'cbsd_manager_pubkey.php' . '">'
-			. gtext('Please add public key first.')
-			. '</a>';
-		$prerequisites_ok = false;
+	if(!get_all_pubkey_list()):
+		$errormsg = gtext('No public key added yet.')
+				. ' '
+				. '<a href="' . 'cbsd_manager_pubkey.php' . '">'
+				. gtext('Please add public key first.')
+				. '</a>';
+			$prerequisites_ok = false;
+	endif;
 endif;
 
 if($_POST):
@@ -175,8 +185,13 @@ $document->render();
 		</thead>
 		<tbody>
 <?php
-			exec("/usr/local/bin/cbsd freejname default_jailname=vm",$jname);
-			exec("/usr/local/bin/cbsd dhcpd",$ip4_addr);
+			if($prerequisites_ok != false ):
+				exec("/usr/local/bin/cbsd freejname default_jailname=vm",$jname);
+				exec("/usr/local/bin/cbsd dhcpd",$ip4_addr);
+			else:
+				$ip4_addr="";
+				$jname="";
+			endif;
 //			$a_action = $l_interfaces;
 			$a_action = [ 'cbsd0' => 'cbsd0' ];
 			$b_action = $l_release;
@@ -214,10 +229,17 @@ $document->render();
 ?>
 		</tbody>
 	</table>
+<?php
+	if($prerequisites_ok != false ):
+?>
 	<div id="submit">
 		<input name="Create" type="submit" class="formbtn" value="<?=gtext('Create');?>"/>
 		<input name="Cancel" type="submit" class="formbtn" value="<?=gtext('Cancel');?>" />
 	</div>
+<?php
+	endif;
+?>
+
 <?php
 	include 'formend.inc';
 ?>
