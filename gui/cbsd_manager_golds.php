@@ -116,8 +116,10 @@ if($_POST):
 		endif;
 	endif;
 else:
-	$savemsg = "Init:<br>";
-	$savemsg .= implode("<br>", $a_release);
+	if(!empty($a_release)):
+		$savemsg = "Init:<br>";
+		$savemsg .= implode("<br>", $a_release);
+	endif;
 endif;
 
 include 'fbegin.inc';
