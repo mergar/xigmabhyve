@@ -25,7 +25,9 @@ if(!file_exists("{$workdir}/cmd.subr")):
 endif;
 
 if(!empty($cbsd_version)):
-	exec("/usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | /usr/bin/sort",$profileinfo);
+
+	exec("/bin/echo; /usr/local/bin/cbsd show_profile_list search_profile=vm-\*-cloud show_cloud=1 show_bhyve=1 uniq=1 display=path header=0 | /usr/bin/sed -e 's:.conf::g' -e \"s:{$workdir}/etc/defaults/vm-::g\" | /usr/bin/tr -s ' ' '\n';",$profileinfo);
+	array_shift($profileinfo);
 	$profilelist = [];
 	foreach($profileinfo as $profile):
 		$profilelist[$profile] = $profile;
@@ -113,6 +115,9 @@ if($_POST):
 			endif;
 		endif;
 	endif;
+else:
+	$savemsg = "Init:<br>";
+	$savemsg .= implode("<br>", $a_release);
 endif;
 
 include 'fbegin.inc';
