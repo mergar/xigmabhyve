@@ -36,7 +36,11 @@ if($_POST):
 		$ports = "";
 		$src = "";
 		$get_release = $pconfig['release_item'];
-		$cmd = sprintf('/usr/local/bin/cbsd fetch_iso path="/usr/local/cbsd/etc/defaults/vm-%1$s.conf" conv2zvol=1 keepname=0 dstdir=default fastscan=1 cloud=1 > %2$s',$get_release,$logevent);
+		$cmd = sprintf('/usr/local/bin/cbsd fetch_iso path="/usr/local/cbsd/etc/defaults/vm-%1$s.conf" conv2zvol=1 keepname=0 dstdir=default fastscan=1 cloud=1 > %2$s 2>&1',$get_release,$logevent);
+
+		$fp=fopen("/tmp/test","w");
+		fputs($fp,"/usr/local/bin/cbsd fetch_iso path=/usr/local/cbsd/etc/defaults/vm-.conf conv2zvol=1 keepname=0 dstdir=default fastscan=1 cloud=1");
+		fclose($fp);
 
 		if ($_POST['Download']):
 			$savemsg = "";

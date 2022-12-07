@@ -75,5 +75,6 @@ pkg remove -y cbsd > /dev/null 2>&1
 
 # workaround for CBSD < 13.1.20
 [ -h /sbin/pfctl ] && /bin/rm -f /sbin/pfctl
+[ -h /usr/sbin/idprio ] && /bin/rm -f /usr/sbin/idprio
 
 exit 0
