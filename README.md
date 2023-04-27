@@ -5,7 +5,7 @@
 **Installation**
 
 ```
-fetch --no-verify-peer https://raw.githubusercontent.com/mergar/xigmabhyve/main/utils/cbsdbhyve_install.sh  && chmod +x cbsdbhyve_install.sh && ./cbsdbhyve_install.sh && echo "=> Done!"
+fetch --no-verify-peer https://raw.githubusercontent.com/cbsd/xigmabhyve/main/utils/cbsdbhyve_install.sh  && chmod +x cbsdbhyve_install.sh && ./cbsdbhyve_install.sh && echo "=> Done!"
 ```
 
 **Credits:**
